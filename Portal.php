@@ -4,12 +4,17 @@ include_once("Config.php");
 
 function start(){
 
+  session_start();
+
   // 拆分url
   list($path, $controller, $action) = parse_query();
 
   // 补充后缀
   $controller .= "_controller";
   $action .= "_action";
+
+  // 不管解析是否成功，都需要把此次访问动作记录下来
+  Logging::p("PORTAL", "$path / $controller / $action");
 
   // 获取controller逻辑处理位置
   $class_file = APP . "controller/". $path . $controller . ".php" ;
@@ -29,7 +34,7 @@ function start(){
     $class = new ReflectionClass($controller);  // 获取类
     $instance = $class->newInstance();          // 获取实例
     $func = $class->getMethod($action);         // 获取函数名
-
+    
     // 在这里如果已知类名，函数名
     // 完全可以手动 
     // $c = new Class;
@@ -44,13 +49,17 @@ function start(){
       $result = $func->invoke($instance);
       echo json_encode($result);
     }
-
   }catch(Exception $e) {
-    var_dump($e);
+    record_error($e);
   }
-
 }
 
+// 记录异常
+function record_error($e){
+  $error = $e->__toString();
+  echo $error;
+  Logging::e("ERROR", $error);
+}
 
 // 拆分query_string函数
 function parse_query() {
@@ -72,6 +81,7 @@ function parse_query() {
   // 提取逻辑区域
   $q = explode("&", $query);
   $logical_area = $q[0];
+  $logical_area = rtrim($logical_area,"/"); // 处理类似于?index/index 或者 ?path / controller / action ?情况
 
   //echo "<br>";
   //var_dump($logical_area);
@@ -82,24 +92,17 @@ function parse_query() {
   
   // 逻辑区域长度
   $length = count($area);
-  
-  /*
-  var_dump($area);
-  echo "<br>";
-  var_dump($length);
-  echo "<br>";
-  */
 
-  //初始化结果
+  // 初始化结果
   $path = '';
   $controller = '';
   $action = '';
 
-  //进行补全和拆分
-  if ($length == 1 && $area[0] == null) {   //如果为空，则补充为index/index
+  // 进行补全和拆分
+  if ($length == 1 && $area[0] == null) {   // 如果为空，则补充为index/index
     $controller = 'index';
     $action = 'index';
-  }else if ( $length < 2) {                 //如果只有一个controller,则补充为controller/index
+  }else if ( $length < 2) {                 // 如果只有一个controller,则补充为controller/index
     $controller = $area[$length - 1];
     $action = 'index';
   }else {

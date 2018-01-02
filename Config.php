@@ -5,7 +5,7 @@ defined('APP') or define('APP', dirname(__FILE__).'/../app/');
 
 
 
-//include_once(FRAMEWORK . 'Logging.php');
+include_once(FRAMEWORK . 'Logging.php');
 
 
 
