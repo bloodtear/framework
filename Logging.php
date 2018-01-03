@@ -24,20 +24,33 @@ class Logging {
     
   }
 
+  // Database
   public static function d($module, $input){
     self::write($module, $input,"D");
   }
 
+  // Portal
   public static function p($module, $input){
     self::write($module, $input,"P");
   }
 
+  // Error
   public static function e($module, $input){
     self::write($module, $input,"E");
   }
 
-  private static function write($module, $input, $level = "D"){
+  // Tpl
+  public static function t($module, $input){
+    self::write($module, $input,"T");
+  }
 
+  // Log
+  public static function l($module, $input){
+    self::write($module, $input,"L");
+  }
+
+
+  private static function write($module, $input, $level = "D"){
     // 确定日志根目录
     $path = self::$path;
     if(!file_exists($path)){

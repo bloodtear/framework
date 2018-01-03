@@ -1,5 +1,11 @@
 <?php
 
+// 此框架为单入口框架，
+// 入口位置为 /root/index.php    
+// 框架位置为 /root/framework    后续考虑移动位置
+// 逻辑位置为 /root/app          后续可以进行route处理，针对不同的域名调用不同地app
+// 插件位置为 /root/vendor       后续可以调整位置
+
 include_once("Config.php");
 
 function start(){
@@ -43,12 +49,32 @@ function start(){
     // 自身实例化的是封装后的类和函数
     // ReflectionClass是开封地，可以调用更多的函数
     // 实话是……这样逼格更高啊！
-    
+
+
+    // 前置函数运行,主要运行user_login鉴定函数
+    if ($class->hasMethod("pretreat")) {
+      $pretreat = $class->getMethod("pretreat");
+      if (!$pretreat->isStatic() && $pretreat->isPublic()) {
+        $result = $pretreat->invoke($instance);
+      }
+    }
+
     // 判断是否非静态类并且是公共函数
     if (!$func->isStatic() && $func->isPublic()) {
       $result = $func->invoke($instance);
-      echo json_encode($result);
+      if (!empty($result)){
+        echo json_encode($result);
+      }
     }
+
+    // 后置函数运行
+    if ($class->hasMethod("posttreat")) {
+      $posttreat = $class->getMethod("posttreat");
+      if (!$posttreat->isStatic() && $posttreat->isPublic()) {
+        $result = $posttreat->invoke($instance);
+      }
+    }
+
   }catch(Exception $e) {
     record_error($e);
   }
