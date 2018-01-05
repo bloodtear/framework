@@ -8,11 +8,11 @@
 // 需要一个确定地位置，目前定为app_path下的logs文件
 // 先找到位置，再创建文件，然后填充内容
 
-include_once(FRAMEWORK . "/Config.php");
+//include_once(FRAMEWORK . "/Config.php");
 
 class Logging {
 	
-	public static $path = APP . "logs/";
+	public static $path = APP_PATH . "logs/";
   public static $instance;
 
 

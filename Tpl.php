@@ -60,9 +60,9 @@ class Tpl {
     $path = (empty($path) ? '' : implode("/", $path));
 
     // 拼接字符串
-    $tplfile = rtrim(APP . "tpl" . "/" . $path, "/") ."/" . $filename . ".html";
-    $jsfile =  rtrim(APP . "js" . "/" . $path, "/") ."/" . $filename . ".js";
-    $cssfile =  rtrim(APP . "css" . "/" . $path, "/") ."/" . $filename . ".css";
+    $tplfile = rtrim(APP_PATH . "tpl" . "/" . $path, "/") ."/" . $filename . ".html";
+    $jsfile =  rtrim(APP_PATH . "js" . "/" . $path, "/") ."/" . $filename . ".js";
+    $cssfile =  rtrim(APP_PATH . "css" . "/" . $path, "/") ."/" . $filename . ".css";
 
     $final_contents = '';
 
@@ -78,9 +78,11 @@ class Tpl {
       if ($body) {
         $contents = $this->import_data($contents);  // 导入内部变量
         $contents = $this->replace($contents);      // 转译变量
+      } else {
+        $contents = $this->replace_header($contents);   
       }
       $final_contents .= $contents;
-    }else{
+    } else {
       Logging::e("TPL", "$file load failed.");
     }
 
@@ -119,18 +121,33 @@ class Tpl {
     }
   }
 
-  // 转译函数, 注意：此函数只能适用于替换String形式 {:$varname} 其他形式则无法进行替换
+  // 替换函数, 注意：此函数只能适用于替换String形式 {:$varname} 其他形式则无法进行替换
   private function replace ($input) {
       $pattern = '/({:\$)(.*)(})/';
-      $replace = '<?php echo \$$2 ;?>'; // 坑爹的网站，在php.net才发现可以把pattern分解成()()()的格式，并且在replace里使用$1 $2 $3替代
+      $replace = '<?php echo \$$2 ;?>'; 
+      // 坑爹的网站，在php.net才发现可以把pattern分解成()()()的格式，并且在replace里使用$1 $2 $3替代
       return preg_replace($pattern, $replace, $input);
+  }
+
+
+  // 头部替换函数，只替换vendor app
+  private function replace_header ($input) {
+      $pattern = '/\{:\$VENDOR\}/';
+      $replace = '<?php echo VENDOR_URL ;?>';
+      $ret = preg_replace($pattern, $replace, $input);
+
+      $pattern = '/\{:\$APP\}/';
+      $replace = '<?php echo APP_URL ;?>';
+      return preg_replace($pattern, $replace, $ret);
+      
   }
 
   // 导入内部变量, 注意：此函数只能适用于string和array形式 其他形式无法导入
   private function import_data($contents){
+    $import = '';
     if (!empty($this->data)) { 
       //Logging::l('mdata', json_encode($this->data));
-      $import = '<?php ';
+      $import .= '<?php ';
       foreach ($this->data as $k => $v) {
         $import .= $this->assign($k, $v);
       }
@@ -160,7 +177,7 @@ class Tpl {
 
   // 读文件
   private function read_file($file){
-      if (!file_exists($file)) {
+      if (!file_exists($file) || empty(filesize($file))) {  // 文件不存在或者文件为空都返回false
         return false;
       }
       Logging::l("read", $file);

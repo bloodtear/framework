@@ -23,10 +23,10 @@ function start(){
   Logging::p("PORTAL", "$path / $controller / $action");
 
   // 获取controller逻辑处理位置
-  $class_file = APP . "controller/". $path . $controller . ".php" ;
+  $class_file = APP_PATH . "controller/". $path . $controller . ".php" ;
 
   // 判断文件是否404
-  $notfound = FRAMEWORK . "404notfound.html";
+  $notfound = FRAMEWORK_PATH . "404notfound.html";
   if (!file_exists($class_file)) {
     include_once($notfound);
     exit;
