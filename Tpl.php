@@ -40,14 +40,14 @@ class Tpl {
     $footer = $this->footer;
 
     $this->load($header);
-    $this->load($body);
+    $this->load($body, true);
     $this->load($footer);
 
   }
 
 
-  // 加载include文件，需要指明加载文件位置不需要后缀
-  private function load($path){
+  // 加载include文件，需要指明加载文件位置
+  private function load($path, $body = false){
     $path = trim($path, "/");
     $path = explode("/", $path);
     $length = count($path);
@@ -62,11 +62,37 @@ class Tpl {
     // 拼接字符串
     $tplfile = rtrim(APP . "tpl" . "/" . $path, "/") ."/" . $filename . ".html";
     $jsfile =  rtrim(APP . "js" . "/" . $path, "/") ."/" . $filename . ".js";
-    $cssfile =  rtrim(APP . "css" . "/" . $path, "/") ."/" . $filename . ".js";
+    $cssfile =  rtrim(APP . "css" . "/" . $path, "/") ."/" . $filename . ".css";
 
-    $this->include_file($cssfile);
-    $this->include_file($tplfile, true);
-    $this->include_file($jsfile);
+    $final_contents = '';
+
+    // 加载css文件
+    if (file_exists($cssfile) && $body) {  
+      $contents = $this->read_file($cssfile);            
+      $final_contents .= "<style type='text/css'>" . $contents . "</style>";
+    }
+
+    // 加载html文件
+    if (file_exists($tplfile)) {
+      $contents = $this->read_file($tplfile);
+      if ($body) {
+        $contents = $this->import_data($contents);  // 导入内部变量
+        $contents = $this->replace($contents);      // 转译变量
+      }
+      $final_contents .= $contents;
+    }else{
+      Logging::e("TPL", "$file load failed.");
+    }
+
+    // 加载js文件
+    if (file_exists($jsfile)  && $body) {  
+      $contents = $this->read_file($jsfile);
+      $final_contents .= "<script type='text/javascript'>" . $contents . "</script>";
+    }
+    Logging::l("final_contents", "$final_contents");
+
+    $tempfile = $this->write_file($final_contents);
+    include($tempfile);   // 最终还是只能include,因为不仅有输出，还有php脚本
 
   }
 
@@ -82,40 +108,28 @@ class Tpl {
 
   }
 
-
-  // 加载函数， 默认不输出log错误，js和css非必须存在
-  // 如果有{:$varname} 则替换为 < ?php echo $varname; ? >
-  private function include_file($file, $log = false){
-    if (file_exists($file)) {
-      $mdata = $this->data; // 提取内部变量
-
-
-      $contents = $this->read_file($file);
-      $contents = $this->import_data($contents);
-      $contents = $this->replace($contents);  // 转译变量
-      $tempfile = $this->write_file($contents);
-
-      include($tempfile);   // 最终还是只能include,因为不仅有输出，还有php脚本
-
-    }else if ($log){
-      Logging::e("TPL", "$file load failed.");
+  // 获取后缀 已弃用
+  private function extension($file){
+    if (is_string($file) && file_exists($file)) {
+      $f = explode(".", $file);
+      $l = count($f);
+      return $extension = $f[$l - 1];
+    }else {
+      return false;
     }
-
   }
 
-
-  // 转译函数, 注意：此函数只能适用于String形式，{:$varname} 其他形式则无法进行替换
+  // 转译函数, 注意：此函数只能适用于替换String形式 {:$varname} 其他形式则无法进行替换
   private function replace ($input) {
       $pattern = '/({:\$)(.*)(})/';
       $replace = '<?php echo \$$2 ;?>'; // 坑爹的网站，在php.net才发现可以把pattern分解成()()()的格式，并且在replace里使用$1 $2 $3替代
       return preg_replace($pattern, $replace, $input);
   }
 
-
   // 导入内部变量, 注意：此函数只能适用于string和array形式 其他形式无法导入
   private function import_data($contents){
     if (!empty($this->data)) { 
-      Logging::l('mdata', json_encode($this->data));
+      //Logging::l('mdata', json_encode($this->data));
       $import = '<?php ';
       foreach ($this->data as $k => $v) {
         $import .= $this->assign($k, $v);
@@ -126,7 +140,7 @@ class Tpl {
 
   }
 
-  // 核心赋值函数
+  // 核心赋值函数 暂时用递归
   private function assign($k, $v) {
     $ret = '';
     if (is_string($v) ) { // 字符串直接输出
@@ -146,6 +160,10 @@ class Tpl {
 
   // 读文件
   private function read_file($file){
+      if (!file_exists($file)) {
+        return false;
+      }
+      Logging::l("read", $file);
       $f = fopen($file, "r");
       $contents = fread($f, filesize($file)); // 提取原始文件
       fclose($f);
@@ -156,7 +174,7 @@ class Tpl {
 
   // 写临时文件
   private function write_file($contents){
-      Logging::l("contents", $contents);
+      //Logging::l("contents", $contents);
       $tempfile = rtrim(APP, "/"). "/.tempfile";  // 创建临时文件
       touch($tempfile);
       $f = fopen($tempfile, "w");
