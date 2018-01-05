@@ -91,7 +91,7 @@ class Tpl {
       $contents = $this->read_file($jsfile);
       $final_contents .= "<script type='text/javascript'>" . $contents . "</script>";
     }
-    Logging::l("final_contents", "$final_contents");
+    //Logging::l("final_contents", "$final_contents");
 
     $tempfile = $this->write_file($final_contents);
     include($tempfile);   // 最终还是只能include,因为不仅有输出，还有php脚本
@@ -180,7 +180,7 @@ class Tpl {
       if (!file_exists($file) || empty(filesize($file))) {  // 文件不存在或者文件为空都返回false
         return false;
       }
-      Logging::l("read", $file);
+      //Logging::l("read", $file);
       $f = fopen($file, "r");
       $contents = fread($f, filesize($file)); // 提取原始文件
       fclose($f);

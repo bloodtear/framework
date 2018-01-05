@@ -23,7 +23,9 @@ defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 include_once(FRAMEWORK_PATH . 'Logging.php');
 include_once(FRAMEWORK_PATH . 'Tpl.php');
 include_once(FRAMEWORK_PATH . 'helper.php');
-include_once(FRAMEWORK_PATH . 'Portal.php');
+include_once(FRAMEWORK_PATH . 'portal.php');
+include_once(FRAMEWORK_PATH . 'action.php');
+include_once(FRAMEWORK_PATH . 'parse.php');
 
 
 
