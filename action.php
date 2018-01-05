@@ -6,7 +6,6 @@
 // 逻辑位置为 /root/app          后续可以进行route处理，针对不同的域名调用不同地app
 // 插件位置为 /root/vendor       后续可以调整位置
 
-include_once("Config.php");
 
 function action(){
 
