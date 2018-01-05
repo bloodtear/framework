@@ -23,7 +23,7 @@ function action(){
   Logging::p("ACTION", "$path / $controller / $action");
 
   // 获取controller逻辑处理位置
-  $class_file = APP_PATH . "controller/". $path . $controller . ".php" ;
+  $class_file = APP_PATH . "controller/". $path . "/" . $controller . ".php" ;
 
   Logging::p("class_file", $class_file);
   // 判断文件是否404
@@ -33,7 +33,7 @@ function action(){
     Logging::p("class_file404", 404);
     include($notfound);
 
-    exit;
+    return;
   }
 
   // 导入php文件
