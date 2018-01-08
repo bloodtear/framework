@@ -22,6 +22,7 @@ defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 // 导入Framework各个模块
 include_once(FRAMEWORK_PATH . 'Logging.php');
 include_once(FRAMEWORK_PATH . 'Tpl.php');
+include_once(FRAMEWORK_PATH . 'Database.php');
 include_once(FRAMEWORK_PATH . 'helper.php');
 include_once(FRAMEWORK_PATH . 'portal.php');
 include_once(FRAMEWORK_PATH . 'action.php');

@@ -29,9 +29,8 @@ function action(){
   $notfound = FRAMEWORK_PATH . "404notfound.html";
 
   if (empty(file_exists($class_file))) {
-    Logging::p("class_file404", 404);
+    Logging::e("ERROR", "404 not found : $class_file");
     include($notfound);
-
     return;
   }
 
