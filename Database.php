@@ -13,33 +13,45 @@ class Database {
   }
 
   private function __construct(){
-    if (empty($this->db_ping())) {
-      $this->reconnect();
-    }
+    $this->connect();
   }
 
-  // PING函数，判断数据库是否已连接，模拟mysql_ping函数
-  private function db_ping() {
+  // PING函数，判断数据库是否已连接，
+  private function ping() {
+    /*
     if (empty($this->database)) {
+      Logging::d('DBPING' , "no database");
       return false;
     }
+    */
     try {
-      $conn = $this->database->getAttribute();
+      //$this->query('select 1;');
+      $this->database->getAttribute(PDO::ATTR_SERVER_INFO);
     }catch(PDOException $e) {
-      die('Db_ping failed: ' . $e->getMessage());
-      Logging::e("DBPING", 'Db_ping failed: ' . $e->getMessage());
+
+      Logging::d('DBPING' , "no select 1");
+      return false;
     }
-    return $conn;
+    return true;
+  }
+
+  private function reconnect() {
+    if (!$this->ping()) {
+      $this->connect();
+    }
   }
 
   // 创建PDO对象
-  private function reconnect() {
+  private function connect() {                
     try {
       $this->database = new PDO(
         "mysql:dbname=". DB_DBNAME . ";host=" . DB_HOST, 
         DB_USERNAME, 
         DB_PASSWORD,
-        array(PDO::ATTR_PERSISTENT => true)); // 默认持久连接
+        array(
+          PDO::ATTR_PERSISTENT => true, // 默认持久连接
+          PDO::ATTR_TIMEOUT => 3
+        )); 
       Logging::d("DB_CONN","Database is reconnected");
     } catch (PDOException $e) {
       Logging::e("DBPDO", 'Connection failed: ' . $e->getMessage());
@@ -50,7 +62,7 @@ class Database {
   // query函数
   private function query($query) {
     Logging::d("QUERY", "$query");
-
+    $this->reconnect();
     $ret = $this->database->query($query);
     if (!$ret) {
       Logging::e("errorInfo", $this->database->errorInfo());
@@ -130,26 +142,31 @@ class Database {
 
   // begintransaction
   public function begin_transaction () {
+    $this->reconnect();
     return $this->database->beginTransaction();
   }
 
   // commit 
   public function commit () {
+    $this->reconnect();
     return $this->database->commit();
   }
 
   // rollback
   public function rollback() {
+    $this->reconnect();
     return $this->database->rollback();
   }
 
   // lastInsertId 
   public function last_insert_id () {
+    $this->reconnect();
     return $this->database->lastInsertId();
   }
 
   // exec
   public function exec($query) {
+    $this->reconnect();
     Logging::d("EXEC", $query);
     return $this->database->exec($query);
   }
