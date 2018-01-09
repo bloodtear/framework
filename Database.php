@@ -67,7 +67,7 @@ class Database {
     $query = "select * from $table $where $addons;";
     $ret = $this->query($query);
 
-    return $ret->fetchAll();
+    return $ret->fetchAll(PDO::FETCH_ASSOC);    //需要加参数，不然会多出编号的数组 默认应该是PDO::FETCH_BOTH
   }
 
   // get_one
@@ -78,7 +78,7 @@ class Database {
     $query = "select * from $table $where $addons limit 1;";
     $ret = $this->query($query);
 
-    return $ret->fetch();
+    return $ret->fetch(PDO::FETCH_ASSOC);       // 同get_all
   }
 
   // insert
@@ -156,6 +156,8 @@ class Database {
 
 }
 
+
+// table类，多了一个private参数table, 调用地时候不需要在填写类名了。
 class Database_table {
   public static $instance = '';
 
@@ -180,7 +182,7 @@ class Database_table {
 
   // get_all
   public function get_all($where = '', $addons = '') {
-    return $this->db($this->table, $where, $addons);
+    return $this->db->get_all($this->table, $where, $addons);
   }
 
   // get_one

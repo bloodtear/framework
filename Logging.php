@@ -85,7 +85,7 @@ class Logging {
 
     $username = 'NOT LOGIN';
     // 确定当前地user
-    //$username = !(empty($_SESSION['username'])) ? $_SESSION['username'] : "NOT LOGIN";
+    $username = !(empty($_SESSION['username'])) ? $_SESSION['username'] : "NOT LOGIN";
 
     // 整合输出内容
     $output = str_pad("<$now>", 30, ' ', STR_PAD_RIGHT);
