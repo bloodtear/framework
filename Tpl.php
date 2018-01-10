@@ -17,9 +17,9 @@ class Tpl {
 
   public static $instance;
 
-  public static function instance (){
+  public static function instance ($header, $footer){
     if (!isset(self::$instance)){
-      self::$instance = new Tpl();
+      self::$instance = new Tpl($header, $footer);
     }
     return self::$instance;
 
@@ -27,7 +27,7 @@ class Tpl {
 
 
   // 创建实例时候指明导入的header和footer
-  public function __construct($header, $footer){
+  private function __construct($header, $footer){
 
     $this->header = $header;
     $this->footer = $footer;
@@ -39,7 +39,7 @@ class Tpl {
     $header = $this->header;
     $footer = $this->footer;
 
-    $this->load($header);
+    $this->load($header);   // header不仅需要
     $this->load($body, true);
     $this->load($footer);
 
@@ -60,17 +60,52 @@ class Tpl {
     $path = (empty($path) ? '' : implode("/", $path));
 
     // 拼接字符串
-    $tplfile = rtrim(APP_PATH . "tpl" . "/" . $path, "/") ."/" . $filename . ".html";
-    $jsfile =  rtrim(APP_PATH . "js" . "/" . $path, "/") ."/" . $filename . ".js";
-    $cssfile =  rtrim(APP_PATH . "css" . "/" . $path, "/") ."/" . $filename . ".css";
+    $tplfile = rtrim(APP_PATH . "tpl" . "/" . $path) ."/" . $filename . ".html";
+    $jsfile =  rtrim(APP_PATH . "js" . "/" . $path) ."/" . $filename . ".js";
+    $cssfile =  rtrim(APP_PATH . "css" . "/" . $path) ."/" . $filename . ".css";
+
+    // common.css
+    $common_css_file = rtrim(APP_PATH . "css") ."/common.css";
+    $this_common_css_file = rtrim(APP_PATH . "css" . "/" . $path) ."/common.css";
+
+    // common.js
+    $common_js_file = rtrim(APP_PATH . "js") ."/common.js";
+    $this_common_js_file = rtrim(APP_PATH . "js" . "/" . $path) ."/common.js";
 
     $final_contents = '';
 
-    // 加载css文件
-    if (file_exists($cssfile) && $body) {  
-      $contents = $this->read_file($cssfile);            
+
+    // 会自动加载common, 先加载js/ css/目录下的，
+    // 然后加载自身path下的common,
+    // 如无则不加载
+
+    // 加载common.css
+    if (file_exists($common_css_file) && $body) {
+      $contents = $this->read_file($common_css_file);
       $final_contents .= "<style type='text/css'>" . $contents . "</style>";
     }
+    if (file_exists($this_common_css_file) && $body) {
+      $contents = $this->read_file($this_common_css_file);
+      $final_contents .= "<style type='text/css'>" . $contents . "</style>";
+    }
+
+    // 加载common.js
+    if (file_exists($common_js_file) && $body) {
+      $contents = $this->read_file($common_js_file);
+      $final_contents .= "<script type='text/javascript'>" . $contents . "</script>";
+    }
+    if (file_exists($this_common_js_file) && $body) {
+      $contents = $this->read_file($this_common_js_file);
+      $final_contents .= "<script type='text/javascript'>" . $contents . "</script>";
+    }
+
+
+    // 加载css文件
+    if (file_exists($cssfile) && $body) {
+      $contents = $this->read_file($cssfile);
+      $final_contents .= "<style type='text/css'>" . $contents . "</style>";
+    }
+
 
     // 加载html文件
     if (file_exists($tplfile)) {
@@ -86,12 +121,13 @@ class Tpl {
       Logging::e("TPL", "$file load failed.");
     }
 
+
     // 加载js文件
     if (file_exists($jsfile)  && $body) {  
       $contents = $this->read_file($jsfile);
       $final_contents .= "<script type='text/javascript'>" . $contents . "</script>";
     }
-    //Logging::l("final_contents", "$final_contents");
+
 
     $tempfile = $this->write_file($final_contents);
     include($tempfile);   // 最终还是只能include,因为不仅有输出，还有php脚本
@@ -108,17 +144,6 @@ class Tpl {
     $mdata[$name] = $data;
     $this->data = $mdata;
 
-  }
-
-  // 获取后缀 已弃用
-  private function extension($file){
-    if (is_string($file) && file_exists($file)) {
-      $f = explode(".", $file);
-      $l = count($f);
-      return $extension = $f[$l - 1];
-    }else {
-      return false;
-    }
   }
 
   // 替换函数, 注意：此函数只能适用于替换String形式 {:$varname} 其他形式则无法进行替换

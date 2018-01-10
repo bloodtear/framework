@@ -16,6 +16,14 @@
     }
   }
 
+  function get_session($name, $default = null){
+    if (isset($_SESSION[$name])) {
+      return $_SESSION[$name];
+    } else {
+      return $default;
+    }
+  }
+
 
   // 记录异常
   function record_error($e){
