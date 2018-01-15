@@ -18,11 +18,18 @@ defined('ROOT_URL') or define('ROOT_URL', './');
 defined('VENDOR_URL') or define('VENDOR_URL', ROOT_URL .'vendor');
 defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 
+// redis
+defined('REDIS_HOST') or define('REDIS_HOST', '127.0.0.1');
+defined('REDIS_PORT') or define('REDIS_PORT', '6379');
+
+
+
 
 // 导入Framework各个模块
 include_once(FRAMEWORK_PATH . 'Logging.php');
 include_once(FRAMEWORK_PATH . 'Tpl.php');
 include_once(FRAMEWORK_PATH . 'Database.php');
+include_once(FRAMEWORK_PATH . 'Cache.php');
 include_once(FRAMEWORK_PATH . 'helper.php');
 include_once(FRAMEWORK_PATH . 'portal.php');
 include_once(FRAMEWORK_PATH . 'action.php');
