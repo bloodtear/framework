@@ -22,6 +22,7 @@ defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 // defined('REDIS_HOST') or define('REDIS_HOST', '127.0.0.1');
 defined('REDIS_HOST') or define('REDIS_HOST', '180.76.160.113');
 defined('REDIS_PORT') or define('REDIS_PORT', '6379');
+defined('REDIS_PWD') or define('REDIS_PWD', 'xiaoyu');
 
 
 
