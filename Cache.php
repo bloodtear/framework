@@ -27,6 +27,14 @@ class Cache{
     return  $this->redis->get($n);
   }
 
+  public function list_push($n, $v) {
+    $this->redis->lpush($n, $v);
+  }
+
+  public function list_all($n) {
+    return  $this->redis->lrange($n, 0, -1);
+  }
+
 
 
 

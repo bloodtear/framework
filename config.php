@@ -19,7 +19,8 @@ defined('VENDOR_URL') or define('VENDOR_URL', ROOT_URL .'vendor');
 defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 
 // redis
-defined('REDIS_HOST') or define('REDIS_HOST', '127.0.0.1');
+// defined('REDIS_HOST') or define('REDIS_HOST', '127.0.0.1');
+defined('REDIS_HOST') or define('REDIS_HOST', '180.76.160.113');
 defined('REDIS_PORT') or define('REDIS_PORT', '6379');
 
 
