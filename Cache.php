@@ -29,7 +29,7 @@ class Cache{
   }
 
   public function list_push($n, $v) {
-    $this->redis->lpushx($n, $v);
+    $this->redis->rpush($n, $v);
   }
 
   public function list_all($n) {
