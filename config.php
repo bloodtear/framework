@@ -14,7 +14,11 @@ defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT_PATH.'/vendor/');
 defined('APP_PATH') or define('APP_PATH', ROOT_PATH.'/' . APP . '/');
 
 
-defined('ROOT_URL') or define('ROOT_URL', './');
+
+
+defined('DOMAIN_URL') or define('DOMAIN_URL', 'https://www.bloodtear.cn');
+defined('INSTANCE_URL') or define('INSTANCE_URL', basename(dirname(dirname(__FILE__))) . "/" );
+defined('ROOT_URL') or define('ROOT_URL', DOMAIN_URL . INSTANCE_URL);
 defined('VENDOR_URL') or define('VENDOR_URL', ROOT_URL .'vendor');
 defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 

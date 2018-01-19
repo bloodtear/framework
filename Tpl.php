@@ -217,7 +217,7 @@ class Tpl {
   // 写临时文件
   private function write_file($contents){
       //Logging::l("contents", $contents);
-      $tempfile = rtrim(APP, "/"). "/.tempfile";  // 创建临时文件
+      $tempfile = rtrim(APP_PATH, "/"). "/.tempfile";  // 创建临时文件
       touch($tempfile);
       $f = fopen($tempfile, "w");
       fwrite($f, $contents);      // 写入临时文件
