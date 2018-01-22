@@ -6,10 +6,19 @@
 // 逻辑位置为 /root/app          后续可以进行route处理，针对不同的域名调用不同地app
 // 插件位置为 /root/vendor       后续可以调整位置
 
+include_once("route.php");
+
+route();
 
 function action(){
 
-  session_start();
+  include_once("config.php");
+  
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+
+  Logging::set_log_path(dirname(__FILE__) . "/../" . APP . "/logs/");
 
   // 拆分url
   list($path, $controller, $action) = ajax_parse_query();

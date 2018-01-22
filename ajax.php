@@ -1,6 +1,6 @@
 <?php
 
-include_once("framework/config.php");
+include_once("framework/action.php");
 
 
 action();  //主启动函数

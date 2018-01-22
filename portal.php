@@ -14,10 +14,11 @@ function start(){
 
   include_once("config.php");
   
-
   if (!isset($_SESSION)) {
     session_start();
   }
+  
+  Logging::set_log_path(dirname(__FILE__) . "/../" . APP . "/logs/");
 
   // 拆分url
   list($path, $controller, $action) = parse_query();
