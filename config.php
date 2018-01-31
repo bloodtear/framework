@@ -6,7 +6,12 @@
 // APP可进行route
 defined('APP') or define('APP', 'app');
 
-include_once("/var/www/" . APP . "_config.php");
+defined('APP_CONFIG') or define('APP_CONFIG', "/var/www/" . APP . "_config.php");
+
+if (file_exists(APP_CONFIG)) {
+  include_once(APP_CONFIG);
+}
+
 // 需要说明的是： index.php文件中的start函数位于 www/framework/portal.php中
 // 所以需要设置ROOT-PATH为上一级目录
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(__FILE__) . "/.."); 

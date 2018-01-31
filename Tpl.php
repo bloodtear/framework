@@ -39,10 +39,12 @@ class Tpl {
     $header = $this->header;
     $footer = $this->footer;
 
-    $this->load($header);   // header不仅需要
-    $this->load($body, true);
-    $this->load($footer);
+    $c = $this->load($header);   // header不仅需要
+    $c .= $this->load($body, true);
+    $c .= $this->load($footer);
 
+    $c = eval('?>'. $c);
+    echo $c;
   }
 
 
@@ -128,7 +130,7 @@ class Tpl {
       $final_contents .= "<script type='text/javascript'>" . $contents . "</script>";
     }
 
-
+    return $final_contents;
     $tempfile = $this->write_file($final_contents);
     include($tempfile);   // 最终还是只能include,因为不仅有输出，还有php脚本
 
