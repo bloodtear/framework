@@ -35,6 +35,8 @@ defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 
 // 导入Framework各个模块
 include_once(FRAMEWORK_PATH . 'Logging.php');
+include_once(FRAMEWORK_PATH . 'Request.php');
+include_once(FRAMEWORK_PATH . 'Reponse.php');
 include_once(FRAMEWORK_PATH . 'Tpl.php');
 include_once(FRAMEWORK_PATH . 'Database.php');
 include_once(FRAMEWORK_PATH . 'Cache.php');
