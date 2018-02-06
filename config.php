@@ -39,9 +39,7 @@ include_once(FRAMEWORK_PATH . 'Tpl.php');
 include_once(FRAMEWORK_PATH . 'Database.php');
 include_once(FRAMEWORK_PATH . 'Cache.php');
 include_once(FRAMEWORK_PATH . 'helper.php');
-include_once(FRAMEWORK_PATH . 'portal.php');
-include_once(FRAMEWORK_PATH . 'action.php');
-include_once(FRAMEWORK_PATH . 'parse.php');
+include_once(FRAMEWORK_PATH . 'Portal.php');
 
 
 

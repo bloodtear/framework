@@ -1,8 +1,8 @@
 <?php
 
-include_once("framework/portal.php");
+include_once("framework/Portal.php");
 
-start();  //主启动函数
+Portal::instance()->start();  //主启动函数
 
 
 
