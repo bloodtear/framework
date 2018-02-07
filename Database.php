@@ -2,8 +2,9 @@
 
 class Database {
 
-  private $database = '';
   public static $instance;
+
+  private $database = '';
   
   public static function instance (){
     if (empty(self::$instance)) {
@@ -251,19 +252,9 @@ class Database_table {
 
 
 
-
-
-
-
-
 }
 
 
 
 
 
-
-
-
-
-?>

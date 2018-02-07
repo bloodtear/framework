@@ -42,11 +42,7 @@ include_once(FRAMEWORK_PATH . 'Database.php');
 include_once(FRAMEWORK_PATH . 'Cache.php');
 include_once(FRAMEWORK_PATH . 'helper.php');
 include_once(FRAMEWORK_PATH . 'Portal.php');
+include_once(FRAMEWORK_PATH . 'Loader.php');
 
 
 
-
-
-
-
-?>

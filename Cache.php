@@ -1,10 +1,8 @@
 <?php
-
-
-
 class Cache{
 
   public static $instance;
+
   private $redis;
   
   public static function instance() {
@@ -37,32 +35,7 @@ class Cache{
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-?>

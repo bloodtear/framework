@@ -4,6 +4,7 @@
   function go($path) {
     $path = trim($path, '/');
     $url = ROOT_URL . "?$path";
+    Logging::l("REDIRECT", $url);
     header("Location: " . $url);
     exit;
   }
@@ -25,16 +26,3 @@
   }
 
 
-  // 记录异常
-  function record_error($e){
-    $error = $e->__toString();
-    echo $error;
-    Logging::e("ERROR", $error);
-  }
-
-
-
-
-
-
-?>

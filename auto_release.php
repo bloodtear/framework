@@ -23,8 +23,3 @@ $out = shell_exec($shell);
 Logging::l("RELEASE", $out);
 
 
-
-
-
-
-?>

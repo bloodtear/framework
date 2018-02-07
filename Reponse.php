@@ -2,7 +2,9 @@
 
 class Reponse {
 
-  static $instance;
+  public static $instance;
+  
+  private $data;
 
   public static function instance($data = null){
     if (empty(self::$instance)) {

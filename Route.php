@@ -4,7 +4,7 @@ include_once("Logging.php");
 
 class Route {
   
-  static $instance;
+  public static $instance;
 
   public static function instance(){
     if (empty(self::$instance)) {
@@ -18,9 +18,9 @@ class Route {
   }
 
   public function route_host() {
-
     $host = $_SERVER['HTTP_HOST'];
     $file = dirname(__FILE__) . "/../route/" . $host . ".php";
+
     if (file_exists($file)) {
       logging::l("ROUTE", "route to $file");
       include($file);
@@ -28,9 +28,7 @@ class Route {
     }else {
       logging::l("ROUTE", "no route");
     }
-
   }
-
 
 
 }
