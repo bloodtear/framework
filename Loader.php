@@ -14,14 +14,14 @@ class Loader {
       $class_name = $arr[$l - 1];
       //echo $l;
       $cr = class_exists($class_name);
-      \framework\Logging::l("LOADER2", "class_exists $class_name : " .($cr ? "true" : 'false'));
+      \framework\Logging::l("LOADER2", "class_exists $class_name : " .(isset($cr) ? "true" : 'false'));
       $file = implode("/", $arr);
       $file = ROOT_PATH . "/$file.php";
  
       if (file_exists($file)) {
         $r = include_once($file);
       }
-      \framework\Logging::l("LOADER3", $file . ($r ? " success" : " failed"));
+      \framework\Logging::l("LOADER3", $file . (isset($r) ? " success" : " failed"));
     });
   }
 
