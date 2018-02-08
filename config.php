@@ -1,12 +1,14 @@
 <?php
 
+namespace framework;
+
 // 定义路径区域
 
 
 // APP可进行route
 defined('APP') or define('APP', 'app');
 
-defined('APP_CONFIG') or define('APP_CONFIG', "/var/www/" . APP . "_config.php");
+defined('APP_CONFIG') or define('APP_CONFIG', "/home/xiaoyu/" . APP . "_config.php");
 
 if (file_exists(APP_CONFIG)) {
   include_once(APP_CONFIG);
@@ -29,20 +31,21 @@ defined('VENDOR_URL') or define('VENDOR_URL', ROOT_URL .'vendor');
 defined('APP_URL') or define('APP_URL', ROOT_URL . APP );
 
 
+include_once(FRAMEWORK_PATH . 'helper.php');
 
 
 
 
 // 导入Framework各个模块
+/*
 include_once(FRAMEWORK_PATH . 'Logging.php');
 include_once(FRAMEWORK_PATH . 'Request.php');
 include_once(FRAMEWORK_PATH . 'Reponse.php');
 include_once(FRAMEWORK_PATH . 'Tpl.php');
 include_once(FRAMEWORK_PATH . 'Database.php');
 include_once(FRAMEWORK_PATH . 'Cache.php');
-include_once(FRAMEWORK_PATH . 'helper.php');
 include_once(FRAMEWORK_PATH . 'Portal.php');
 include_once(FRAMEWORK_PATH . 'Loader.php');
-
+*/
 
 

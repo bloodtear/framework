@@ -1,5 +1,7 @@
 <?php
 
+namespace framework;
+
 include_once("Logging.php");
 
 class Route {

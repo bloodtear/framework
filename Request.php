@@ -1,5 +1,7 @@
 <?php
 
+namespace framework;
+
 class Request {
 
   public static $instance;
@@ -95,6 +97,7 @@ class Request {
     Logging::p("PORTAL", "$this->method || $path || $controller || $action");
     $controller = ucfirst($controller . "_controller");
     $class_file = APP_PATH . "controller/". $path . "/" . $controller . ".php";
+
 
     return array($controller, $action, $class_file, $this->method());
   }

@@ -1,10 +1,9 @@
 <?php
-
   // 跳转用
   function go($path) {
     $path = trim($path, '/');
     $url = ROOT_URL . "?$path";
-    Logging::l("REDIRECT", $url);
+    \framework\Logging::l("REDIRECT", $url);
     header("Location: " . $url);
     exit;
   }

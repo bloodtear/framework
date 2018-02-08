@@ -1,5 +1,7 @@
 <?php
 
+namespace framework;
+
 // 此框架为单入口框架，
 // 入口位置为 /root/index.php    
 // 框架位置为 /root/framework    后续考虑移动位置
@@ -7,6 +9,7 @@
 // 插件位置为 /root/vendor       后续可以调整位置
 
 include_once("Route.php");
+include_once("Loader.php");
 
 class Portal{
 
@@ -27,6 +30,8 @@ class Portal{
     include_once("config.php");
     (!isset($_SESSION)) ? session_start() : 1;
     Logging::set_log_path(dirname(__FILE__) . "/../" . APP . "/logs/");
+
+    \framework\Loader::init();
   }
 
   private function execute ($dispatch) {
@@ -35,7 +40,7 @@ class Portal{
     Loader::load($class_file);
 
     try {
-      $class    = new ReflectionClass($controller);  // 获取类
+      $class    = new \ReflectionClass($controller);  // 获取类
       $instance = $class->newInstance();          // 获取实例
       $func     = $class->getMethod($action);         // 获取函数名
 
@@ -71,11 +76,19 @@ class Portal{
   }
 
   public function run(){
+    Logging::e("HOOK", "<----------------- portal start ------------------>");
+    Loader::init();
+    
+    Logging::e("HOOK", "<----------------- Request start ------------------>");
     $request  = Request::instance();
 
+    Logging::e("HOOK", "<----------------- parse_query start ------------------>");
     $dispatch = $request->parse_query();
+
+    Logging::e("HOOK", "<----------------- execute start ------------------>");
     $data     = $this->execute($dispatch);
   
+    Logging::e("HOOK", "<----------------- reponse start ------------------>");
     $reponse  = Reponse::instance($data);
     $reponse->send();
   }

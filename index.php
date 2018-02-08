@@ -2,7 +2,7 @@
 
 include_once("framework/Portal.php");
 
-$portal = Portal::instance();  //主启动函数
+$portal = \framework\Portal::instance();  //主启动函数
 
 $portal->init();
 
