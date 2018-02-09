@@ -74,9 +74,8 @@ class Request {
       $q            = explode("&", $query);      // 提取逻辑区域
       $logical_area = $q[0];
       $logical_area = rtrim($logical_area,"/"); // 处理类似于?index/index 或者 ?path / controller / action ?情况
-      
-      $area   = explode("/", $logical_area);// 拆分逻辑区域
-      $length = count($area);// 逻辑区域长度
+      $area         = explode("/", $logical_area);// 拆分逻辑区域
+      $length       = count($area);// 逻辑区域长度
 
       // 进行补全和拆分
       if ($length == 1 && $area[0] == null) {   // 如果为空，则补充为index/index
@@ -94,10 +93,13 @@ class Request {
         $path = implode("/", $area);
       }
     }
-    Logging::p("PORTAL", "$this->method || $path || $controller || $action");
-    $controller = ucfirst($controller . "_controller");
-    $class_file = APP_PATH . "controller/". $path . "/" . $controller . ".php";
 
+    $ctrl = ucfirst($controller . "_controller");
+    $class_file = APP_PATH . "controller/". $path . "/" . $ctrl . ".php";
+    //$controller = "\\" . APP . "\\controller\\" . $ctrl;
+    $controller = APP . "\\controller\\" . $ctrl;
+
+    Logging::p("PORTAL", "$this->method || $path || $ctrl || $action || $controller");
 
     return array($controller, $action, $class_file, $this->method());
   }

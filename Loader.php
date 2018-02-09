@@ -4,36 +4,76 @@ namespace framework;
 
 class Loader {
 
+  const  FRAMEWORK  = 0;
+  const  APP        = 1;
+  const  CONTROLLER = 2;
+  const  DATABASE   = 3;
+
   public static function init() {
     spl_autoload_register(function ($class) {
+      //Logging::l("LOADER1", "load classname : $class" );
       
-      Logging::l("LOADER1", $class );
-      
-      $arr = explode("\\", $class);
-      $l = count($arr);
-      $class_name = $arr[$l - 1];
-      //echo $l;
-      $cr = class_exists($class_name);
-      \framework\Logging::l("LOADER2", "class_exists $class_name : " .(isset($cr) ? "true" : 'false'));
-      $file = implode("/", $arr);
-      $file = ROOT_PATH . "/$file.php";
- 
-      if (file_exists($file)) {
-        $r = include_once($file);
+      $file      = str_replace("\\", "/", trim($class, "\\"));   // 转换 “\“ 为 ”/“
+      $file_name = self::get_filename($file);
+     
+      if (file_exists($file_name)) {
+        $r = include_once($file_name);
       }
-      \framework\Logging::l("LOADER3", $file . (isset($r) ? " success" : " failed"));
+
+      //Logging::l("LOADER3", "load result: " . (isset($r) ? "success" : "failed") . " $file_name");
+      //Logging::l("LOADER3", "class_exist: " . class_exists($class , false));
+
+      return;
     });
   }
-
 
   public static function load($file) {
     $notfound = FRAMEWORK_PATH . "404notfound.html";
     if (!file_exists($file)) {
-      \framework\Logging::e("ERROR", "404 not found : $class_file");
+      Logging::e("ERROR", "404 not found : $class_file");
       include($notfound);
       exit;
     }
     include_once($file);
+  }
+
+  public static function get_loader_type ($file) {
+      $array = [
+        strstr($file, "framework"), 
+        strstr($file, APP . "/app"), 
+        strstr($file, APP . "/controller"), 
+        strstr($file, APP . "/database")];
+
+      foreach ($array as $k => $v) {
+        if (!empty($v)) {
+          return $k;
+        }
+      }
+  }
+
+  public static function get_filename ($file) {
+    $loader_type  = self::get_loader_type($file);
+    //Logging::l("LOADER", "get_loader_type : $loader_type" );
+
+    switch ($loader_type) {
+      case self::FRAMEWORK :
+        $file_name = ROOT_PATH . "/$file.php";
+        break;
+
+      case 1 :
+        $file_name = ROOT_PATH . "/$file.class.php";
+        break;
+
+      case 2 :
+        $file_name = ROOT_PATH . "/$file.php";
+        break;
+
+      case 3 :
+        $file_name = ROOT_PATH . "/$file.class.php";
+        break;
+
+    }
+    return $file_name;
   }
 
 

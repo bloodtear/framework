@@ -37,9 +37,10 @@ class Portal{
   private function execute ($dispatch) {
     list($controller, $action, $class_file, $method) = $dispatch;
 
-    Loader::load($class_file);
+    //Loader::load($class_file);
 
     try {
+      Logging::l("PORTAL", "controller : $controller");
       $class    = new \ReflectionClass($controller);  // 获取类
       $instance = $class->newInstance();          // 获取实例
       $func     = $class->getMethod($action);         // 获取函数名
