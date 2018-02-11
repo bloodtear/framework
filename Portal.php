@@ -70,6 +70,7 @@ class Portal{
       $error = $e->__toString();
       Loader::not_found();
       Logging::e("ERROR", $error);
+      return false;
     }
     return $result;
   }
