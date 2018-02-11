@@ -28,13 +28,17 @@ class Loader {
   }
 
   public static function load($file) {
-    $notfound = FRAMEWORK_PATH . "404notfound.html";
     if (!file_exists($file)) {
       Logging::e("ERROR", "404 not found : $class_file");
-      include($notfound);
+      self::not_found();
       exit;
     }
     include_once($file);
+  }
+
+  public static function not_found() {
+    include(FRAMEWORK_PATH . "404notfound.html");
+    return;
   }
 
   public static function get_loader_type ($file) {

@@ -37,8 +37,6 @@ class Portal{
   private function execute ($dispatch) {
     list($controller, $action, $class_file, $method) = $dispatch;
 
-    //Loader::load($class_file);
-
     try {
       Logging::l("PORTAL", "controller : $controller");
       $class    = new \ReflectionClass($controller);  // 获取类
@@ -68,9 +66,9 @@ class Portal{
         }
       }
 
-    }catch(Exception $e) {
+    }catch(\Exception $e) {
       $error = $e->__toString();
-      echo $error;
+      Loader::not_found();
       Logging::e("ERROR", $error);
     }
     return $result;
