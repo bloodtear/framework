@@ -2,7 +2,7 @@
   // 跳转用
   function go($path) {
     $path = trim($path, '/');
-    $url = ROOT_URL . "?$path";
+    $url = DOMAIN_URL . "?$path";
     \framework\Logging::l("REDIRECT", $url);
     header("Location: " . $url);
     exit;
