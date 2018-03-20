@@ -96,8 +96,7 @@ class Request {
 
     $ctrl = ucfirst($controller . "_controller");
     $class_file = APP_PATH . "controller/". $path . "/" . $ctrl . ".php";
-    //$controller = "\\" . APP . "\\controller\\" . $ctrl;
-    $controller = APP . "\\controller\\" . $ctrl;
+    $controller = rtrim(APP . "\\controller\\". str_replace('/', '\\', $path), '\\') .  "\\" . $ctrl;
 
     Logging::p("PORTAL", "$this->method || $path || $ctrl || $action || $controller");
 
