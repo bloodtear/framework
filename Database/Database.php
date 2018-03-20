@@ -4,7 +4,7 @@ namespace framework\Database;
 
 class Database {
 
-  public static $instance;
+  private static $instance;
 
   private $database = '';
   
@@ -28,8 +28,8 @@ class Database {
     }
     */
     try {
-      //$this->query('select 1;');
-      $this->database->getAttribute(\PDO::ATTR_SERVER_INFO);
+      //$this->database->query('select 1;');
+      //$this->database->getAttribute(\PDO::ATTR_SERVER_INFO);
     }catch(PDOException $e) {
 
       \framework\Logging::d('DBPING' , "no select 1");
@@ -39,9 +39,9 @@ class Database {
   }
 
   private function reconnect() {
-    if (!$this->ping()) {
+    //if (!$this->ping()) {
       $this->connect();
-    }
+    //}
   }
 
   // 创建PDO对象
@@ -65,6 +65,7 @@ class Database {
   // query函数
   private function query($query) {
     \framework\Logging::d("QUERY", "$query");
+    \framework\Logging::d("database", json_encode($this->database));
     $this->reconnect();
     $ret = $this->database->query($query);
     if (!$ret) {
@@ -74,6 +75,14 @@ class Database {
     return $ret;
   }
 
+  // query_get_all
+  public function query_get_all($query) {
+
+    $ret = $this->query($query);
+
+    return $ret->fetchAll(\PDO::FETCH_ASSOC);    //需要加参数，不然会多出编号的数组 默认应该是PDO::FETCH_BOTH
+  }
+  
   // get_all
   public function get_all($table, $where = '', $addons = '') {
     $where = (empty($where) ? '' : " where $where");

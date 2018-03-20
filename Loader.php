@@ -11,7 +11,7 @@ class Loader {
 
   public static function init() {
     spl_autoload_register(function ($class) {
-      //Logging::l("LOADER1", "load classname : $class" );
+      Logging::l("LOADER", "autoload classname : $class" );
       
       $file      = str_replace("\\", "/", trim($class, "\\"));   // 转换 “\“ 为 ”/“
       $file_name = self::get_filename($file);
@@ -64,15 +64,15 @@ class Loader {
         $file_name = ROOT_PATH . "/$file.php";
         break;
 
-      case 1 :
+      case self::APP :
         $file_name = ROOT_PATH . "/$file.class.php";
         break;
 
-      case 2 :
+      case self::CONTROLLER :
         $file_name = ROOT_PATH . "/$file.php";
         break;
 
-      case 3 :
+      case self::DATABASE :
         $file_name = ROOT_PATH . "/$file.class.php";
         break;
 

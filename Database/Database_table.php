@@ -4,7 +4,7 @@ namespace framework\Database;
 
 // table类，多了一个private参数table, 调用地时候不需要在填写类名了。
 class Database_table {
-  public static $instance = '';
+  private static $instance = '';
 
   public $db = '';
   public $table = '';
@@ -16,7 +16,7 @@ class Database_table {
     return self::$instance;
   }
 
-  protected function __construct($table){
+  protected function __construct($db, $table){
     $this->table = $table;
     $this->db = Database::instance();
   }
