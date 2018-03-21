@@ -136,6 +136,11 @@ class Logging {
   public static function e($module, $input){
     self::instance()->write($module, $input, "E");
   }
+  
+  // Hook
+  public static function h($module, $input){
+    self::instance()->write($module, $input, "H");
+  }
 
   // Tpl
   public static function t($module, $input){

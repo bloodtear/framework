@@ -21,15 +21,15 @@ class Database {
 
   // PING函数，判断数据库是否已连接，
   private function ping() {
-    /*
+    
     if (empty($this->database)) {
-      Logging::d('DBPING' , "no database");
+      \framework\Logging::d('DBPING' , "no database");
       return false;
     }
-    */
+    
     try {
       //$this->database->query('select 1;');
-      //$this->database->getAttribute(\PDO::ATTR_SERVER_INFO);
+      $this->database->getAttribute(\PDO::ATTR_SERVER_INFO);
     }catch(PDOException $e) {
 
       \framework\Logging::d('DBPING' , "no select 1");
@@ -39,9 +39,9 @@ class Database {
   }
 
   private function reconnect() {
-    //if (!$this->ping()) {
+    if (!$this->ping()) {
       $this->connect();
-    //}
+    }
   }
 
   // 创建PDO对象
@@ -65,7 +65,6 @@ class Database {
   // query函数
   private function query($query) {
     \framework\Logging::d("QUERY", "$query");
-    \framework\Logging::d("database", json_encode($this->database));
     $this->reconnect();
     $ret = $this->database->query($query);
     if (!$ret) {
@@ -155,24 +154,30 @@ class Database {
   // begintransaction
   public function begin_transaction () {
     $this->reconnect();
+    \framework\Logging::d('DATABASE' , "begin_transaction");
+    
     return $this->database->beginTransaction();
   }
 
   // commit 
   public function commit () {
     $this->reconnect();
+    \framework\Logging::d('DATABASE' , "commit");
+    
     return $this->database->commit();
   }
 
   // rollback
   public function rollback() {
     $this->reconnect();
+    \framework\Logging::d('DATABASE' , "rollback");
     return $this->database->rollback();
   }
 
   // lastInsertId 
   public function last_insert_id () {
     $this->reconnect();
+    \framework\Logging::d('lastinsertid', $this->database->lastInsertId());
     return $this->database->lastInsertId();
   }
 

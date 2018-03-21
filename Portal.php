@@ -76,19 +76,19 @@ class Portal{
   }
 
   public function run(){
-    Logging::e("HOOK", "<----------------- portal start ------------------>");
+    Logging::h("HOOK", "<----------------- portal start ------------------>");
     Loader::init();
     
-    Logging::e("HOOK", "<----------------- Request start ------------------>");
+    Logging::h("HOOK", "<----------------- Request start ------------------>");
     $request  = Request::instance();
 
-    Logging::e("HOOK", "<----------------- parse_query start ------------------>");
+    Logging::h("HOOK", "<----------------- parse_query start ------------------>");
     $dispatch = $request->parse_query();
 
-    Logging::e("HOOK", "<----------------- execute start ------------------>");
+    Logging::h("HOOK", "<----------------- execute start ------------------>");
     $data     = $this->execute($dispatch);
   
-    Logging::e("HOOK", "<----------------- reponse start ------------------>");
+    Logging::h("HOOK", "<----------------- reponse start ------------------>");
     $reponse  = Reponse::instance($data);
     $reponse->send();
   }

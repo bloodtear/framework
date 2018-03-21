@@ -53,7 +53,7 @@ class Database_table {
 
   // begintransaction
   public function begin_transaction () {
-    return $this->db->beginTransaction();
+    return $this->db->begin_transaction();
   }
 
   // commit 
