@@ -38,19 +38,29 @@ class Portal{
     list($controller, $action, $class_file, $method) = $dispatch;
 
     try {
+        
       Logging::l("PORTAL", "controller : $controller");
+      
       $class    = new \ReflectionClass($controller);  // 获取类
       $instance = $class->newInstance();          // 获取实例
       $func     = $class->getMethod($action);         // 获取函数名
 
       $result = '';
 
-      // 前置函数运行,主要运行user_login鉴定函数，原则上不输出,仅针对GET作处理
-      if ($class->hasMethod("pretreat") && $method == 'GET') {
+      // 前置函数运行,主要运行user_login鉴定函数，原则上不输出,如果输出即是报错，则break
+      if ($class->hasMethod("pretreat")) {
+        Logging::l("PRETREAT", "pretreat start.");
+        
         $pretreat = $class->getMethod("pretreat");
         if (!$pretreat->isStatic() && $pretreat->isPublic()) {
-          $pretreat->invoke($instance);
+          $result = $pretreat->invoke($instance);
+          if (!empty($result)) {
+            Logging::l("PRETREAT", "pretreat output something, pretreat end.");
+            return $result;
+          }
         }
+        
+        Logging::l("PRETREAT", "pretreat end.");
       }
 
       // 判断是否非静态类并且是公共函数
@@ -59,11 +69,15 @@ class Portal{
       }
 
       // 后置函数运行,原则上不输出，仅针对GET作处理
-      if ($class->hasMethod("posttreat") && $method == 'GET') {
+      if ($class->hasMethod("posttreat")) {
+        Logging::l("POSTTREAT", "posttreat start.");
+        
         $posttreat = $class->getMethod("posttreat");
         if (!$posttreat->isStatic() && $posttreat->isPublic()) {
           $posttreat->invoke($instance);
         }
+        
+        Logging::l("POSTTREAT", "posttreat end.");
       }
 
     }catch(\Exception $e) {
@@ -76,19 +90,19 @@ class Portal{
   }
 
   public function run(){
-    Logging::h("HOOK", "<----------------- portal start ------------------>");
+    Logging::h("HOOK", "<----------------- Portal       start ------------------>");
     Loader::init();
     
-    Logging::h("HOOK", "<----------------- Request start ------------------>");
+    Logging::h("HOOK", "<----------------- Request      start ------------------>");
     $request  = Request::instance();
 
-    Logging::h("HOOK", "<----------------- parse_query start ------------------>");
+    Logging::h("HOOK", "<----------------- Parse query  start ------------------>");
     $dispatch = $request->parse_query();
 
-    Logging::h("HOOK", "<----------------- execute start ------------------>");
+    Logging::h("HOOK", "<----------------- Execute      start ------------------>");
     $data     = $this->execute($dispatch);
   
-    Logging::h("HOOK", "<----------------- reponse start ------------------>");
+    Logging::h("HOOK", "<----------------- Reponse      start ------------------>");
     $reponse  = Reponse::instance($data);
     $reponse->send();
   }

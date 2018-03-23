@@ -23,5 +23,15 @@
       return $default;
     }
   }
+  
+  function set_session($name, $value){
+    $_SESSION[$name] = $value;
+    \framework\Logging::l('SESSION' , "$name : $value");
+  }
+  
+  function unset_session($name){
+    unset($_SESSION[$name]);
+    \framework\Logging::l('UNSESSION' , "$name");
+  }
 
 
