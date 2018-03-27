@@ -16,10 +16,12 @@ class Loader {
       $file      = str_replace("\\", "/", trim($class, "\\"));   // 转换 “\“ 为 ”/“
       $file_name = self::get_filename($file);
      
+      Logging::l("LOADER", "filename: $file_name");
       if (file_exists($file_name)) {
         $r = include_once($file_name);
       }
 
+      
       //Logging::l("LOADER3", "load result: " . (isset($r) ? "success" : "failed") . " $file_name");
       //Logging::l("LOADER3", "class_exist: " . class_exists($class , false));
 
@@ -57,7 +59,8 @@ class Loader {
 
   public static function get_filename ($file) {
     $loader_type  = self::get_loader_type($file);
-    //Logging::l("LOADER", "get_loader_type : $loader_type" );
+    Logging::l("ROOT_PATH", "loader_type : " . $loader_type );
+    Logging::l("ROOT_PATH", "file : " . $file );
 
     switch ($loader_type) {
       case self::FRAMEWORK :
