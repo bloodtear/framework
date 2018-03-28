@@ -11,12 +11,12 @@ class Database_table {
 
  public static function instance (){
     if (empty(self::$instance)) {
-      self::$instance = new Database_table($table);
+      self::$instance = new Database_table();
     }
     return self::$instance;
   }
 
-  protected function __construct($db, $table){
+  protected function __construct($table = ''){
     $this->table = $table;
     $this->db = Database::instance();
   }
