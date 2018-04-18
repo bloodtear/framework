@@ -10,8 +10,9 @@ class Database_table {
   public $table = '';
 
  public static function instance ($table = '', $db_name = '', $db_host = '', $db_username = '', $db_password = ''){
-    if (empty(self::$instance)) {
-      self::$instance = new Database_table();
+    $instance = self::$instance;
+    if (empty($instance) || $instance->db->db_host != $db_host || $instance->db->db_username != $db_username || $instance->db->db_password != $db_password || $instance->db->db_name != $db_name || $instance->table != $table) {
+      self::$instance = new Database_table($table, $db_name, $db_host, $db_username, $db_password);
     }
     return self::$instance;
   }
