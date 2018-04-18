@@ -11,12 +11,12 @@ class Loader {
 
   public static function init() {
     spl_autoload_register(function ($class) {
-      Logging::l("LOADER", "autoload classname : $class" );
+      //Logging::l("LOADER", "autoload classname : $class" );
       
       $file      = str_replace("\\", "/", trim($class, "\\"));   // 转换 “\“ 为 ”/“
       $file_name = self::get_filename($file);
      
-      Logging::l("LOADER", "filename: $file_name");
+      //Logging::l("LOADER", "filename: $file_name");
       if (file_exists($file_name)) {
         $r = include_once($file_name);
       }
@@ -59,8 +59,8 @@ class Loader {
 
   public static function get_filename ($file) {
     $loader_type  = self::get_loader_type($file);
-    Logging::l("ROOT_PATH", "loader_type : " . $loader_type );
-    Logging::l("ROOT_PATH", "file : " . $file );
+    //Logging::l("ROOT_PATH", "loader_type : " . $loader_type );
+    //Logging::l("ROOT_PATH", "file : " . $file );
 
     switch ($loader_type) {
       case self::FRAMEWORK :

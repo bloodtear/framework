@@ -7,15 +7,25 @@ class Database {
   private static $instance;
 
   private $database = '';
+  private $db_name;
+  private $db_host;
+  private $db_username;
+  private $db_password;
   
-  public static function instance (){
-    if (empty(self::$instance)) {
-      self::$instance = new Database();
+  public static function instance ($db_name = '', $db_host = '', $db_username = '', $db_password = ''){
+    $instance = self::$instance;
+    if (empty($instance) || $instance->db_host != $db_host || $instance->db_username != $db_username || $instance->db_password != $db_password || $instance->db_name != $db_name) {
+      self::$instance = new Database($db_host, $db_username, $db_password, $db_name);
     }
     return self::$instance;
   }
 
-  private function __construct(){
+  private function __construct($db_name, $db_host, $db_username, $db_password){
+    $this->db_host = $db_host;
+    $this->db_username = $db_username;
+    $this->db_password = $db_password;
+    $this->db_name = $db_name;
+    
     $this->connect();
   }
 
@@ -45,17 +55,22 @@ class Database {
   }
 
   // 创建PDO对象
-  private function connect() {                
+  private function connect() {
+      $db_host      = empty($this->db_host) ?  DB_HOST : $this->db_host;
+      $db_username  = empty($this->db_username) ?  DB_USERNAME : $this->db_username;
+      $db_password  = empty($this->db_password) ?  DB_PASSWORD : $this->db_password;
+      $db_name      = empty($this->db_name) ?  DB_DBNAME : $this->db_name;
+
     try {
       $this->database = new \PDO(
-        "mysql:dbname=". DB_DBNAME . ";host=" . DB_HOST, 
-        DB_USERNAME, 
-        DB_PASSWORD,
+        "mysql:dbname=". $db_name . ";host=" . $db_host, 
+        $db_username, 
+        $db_password,
         array(
           \PDO::ATTR_PERSISTENT => true, // 默认持久连接
           \PDO::ATTR_TIMEOUT => 3
         )); 
-      \framework\Logging::d("DB_CONN","Database is reconnected");
+      \framework\Logging::d("DB_CONN","Database is reconnected ,$db_host , $db_name");
     } catch (\PDOException $e) {
       \framework\Logging::e("DBPDO", 'Connection failed: ' . $e->getMessage());
       die('Connection failed: ' . $e->getMessage());

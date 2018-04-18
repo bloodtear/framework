@@ -9,16 +9,16 @@ class Database_table {
   public $db = '';
   public $table = '';
 
- public static function instance (){
+ public static function instance ($table = '', $db_name = '', $db_host = '', $db_username = '', $db_password = ''){
     if (empty(self::$instance)) {
       self::$instance = new Database_table();
     }
     return self::$instance;
   }
 
-  protected function __construct($table = ''){
+  protected function __construct($table = '', $db_name = '', $db_host = '', $db_username = '', $db_password = ''){
     $this->table = $table;
-    $this->db = Database::instance();
+    $this->db = Database::instance($db_name, $db_host, $db_username, $db_password);
   }
 
   public function set_table($table) {
